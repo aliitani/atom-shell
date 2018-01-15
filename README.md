@@ -2,7 +2,7 @@
 	   ANT_SHELL short for antecedent shell
 	******************************************
 
-  -I have used '&&' to add two commands in one input line
+  -I have used some of the list operators like '&&', '&', '||' and others
   -example:
     ls > file && cat < file
             OR
