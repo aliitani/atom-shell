@@ -9,6 +9,6 @@
     ls && ls -l
 
   -I have used built in functions like cd, help, exit, history, and umask <br>
-  -Using _GNU_SOURCE and c99 <br>
+  -<i>Using _GNU_SOURCE and c99 <br>
   -Might add more stuff later on. <br>
-  -Enjoy! <br>
+  -Enjoy! </i><br>
