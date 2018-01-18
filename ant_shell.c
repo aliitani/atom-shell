@@ -12,6 +12,7 @@
   -I have used built in functions like cd, help, exit, and umask
   -Still working on history function 
   
+ 
   -to run use the makefile i have just type	
 		'make all && make run'
 		and you should be in business!
