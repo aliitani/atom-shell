@@ -1,6 +1,6 @@
 /*
   ****************************************
-  ANT_SHELL short for antecedent shell
+  ATOM_SHELL short for atom shell
   ************************************
 
   -I have used '&&' to add two commands in one input line
@@ -34,33 +34,33 @@
 #include <fcntl.h>
 
 
-#define ANT_RL_BUFFSIZE 1024
-#define ANT_TOK_BUFSIZE 64
-#define ANT_TOK_DELIM " \t\r\n\a"
+#define atom_RL_BUFFSIZE 1024
+#define atom_TOK_BUFSIZE 64
+#define atom_TOK_DELIM " \t\r\n\a"
 
 
 // to add built in linux commands with c
 
 // step 1
-int ant_cd(char **args);
-int ant_help(char **args);
-int ant_exit(char **args);
-int ant_history(char **args);
-int ant_umask(char **args);
+int atom_cd(char **args);
+int atom_help(char **args);
+int atom_exit(char **args);
+int atom_history(char **args);
+int atom_umask(char **args);
 
 // step 2
 char *builtin_str[] = { "cd", "help", "exit", "history", "umask"};
 
 // step 3
-int (*builtin_func[]) (char **) = {&ant_cd, &ant_help, &ant_exit, &ant_history, &ant_umask};
+int (*builtin_func[]) (char **) = {&atom_cd, &atom_help, &atom_exit, &atom_history, &atom_umask};
 
 
-int ant_num_builtins() {
+int atom_num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
 }
 
 // look back at umask
-int ant_umask(char **args) {
+int atom_umask(char **args) {
 
   int flag = 0;
 
@@ -79,7 +79,7 @@ int ant_umask(char **args) {
     }
     
     if(flag == 1) {
-      printf("ant_shell: octal out of length\n");
+      printf("atom_shell: octal out of length\n");
     } else {
       mode_t um = strtol(args[1], NULL, 8);
       umask(um);
@@ -90,29 +90,29 @@ int ant_umask(char **args) {
   return 1;
 }
 
-int ant_cd(char **args) {
+int atom_cd(char **args) {
   if(args[1] == NULL) {
-    fprintf(stderr, "%s\n", "ant_shell: expected argument to \"cd\"\n");
+    fprintf(stderr, "%s\n", "atom_shell: expected argument to \"cd\"\n");
   } else {
     if(chdir(args[1]) != 0) {
-      perror("ant");
+      perror("atom");
     }
   }
   return 1;
 }
 
-int ant_history(char **args) {
+int atom_history(char **args) {
   system("history");
   return 1;
 }
 
-int ant_help(char **args) {
-    printf("%s\n", "Antecedent's Ant shell help:");
+int atom_help(char **args) {
+    printf("%s\n", "Atom's atom shell help:");
     printf("%s\n", "----------------------------");
     printf("%s\n", "Type program names and arguments, and hit enter!");
     printf("%s\n", "The following are built in:");
 
-    for(int i = 0; i < ant_num_builtins(); i++) {
+    for(int i = 0; i < atom_num_builtins(); i++) {
       printf("  %s\n", builtin_str[i]);
     }
 
@@ -120,14 +120,14 @@ int ant_help(char **args) {
     return 1;
 }
 
-int ant_exit(char ** args) {
+int atom_exit(char ** args) {
   fflush(stdout);
-  printf("%s\n", "GoOoOoOoD Bye!");
+  printf("%s\n", "Good Bye!");
   exit(0);
   return 0;
 }
 
-int ant_launch(char **args) {
+int atom_launch(char **args) {
   int pipefd[2];
   pid_t pid;
   int status, out, in;
@@ -135,7 +135,7 @@ int ant_launch(char **args) {
   if(args[1] == NULL) {
     // if we have only one
     if(pipe(pipefd) == -1) {
-      perror("ant_shell: pipe error");
+      perror("atom_shell: pipe error");
       exit(EXIT_FAILURE);
     }
 
@@ -145,19 +145,19 @@ int ant_launch(char **args) {
       close(pipefd[1]);
       // the child
       if(execvp(args[0], args) == -1) {
-        perror("ant");
+        perror("atom");
       }
 
       close(pipefd[0]);
       exit(EXIT_FAILURE);
     } else if(pid < 0) {
-      perror("ant");
+      perror("atom");
       exit(EXIT_FAILURE);
     } else {
       // the parent
       close(pipefd[0]);
       if(((pid) = waitpid(pid, &status, 0)) < 0 ) {
-        printf("%s\n", "ant_shell: wait pid error.");
+        printf("%s\n", "atom_shell: wait pid error.");
       }
       close(pipefd[1]);
     }
@@ -168,7 +168,7 @@ int ant_launch(char **args) {
           printf("%s\n", "usage: #->> cmd > file-name" );
         } else {
           if(pipe(pipefd) == -1) {
-            perror("ant_shell: pipe error");
+            perror("atom_shell: pipe error");
             exit(EXIT_FAILURE);
           }
           pid = fork();
@@ -182,18 +182,18 @@ int ant_launch(char **args) {
             char * ls_args[] = {args[0], NULL};
 
             if(execvp(ls_args[0], ls_args) == -1) {
-              perror("ant");
+              perror("atom");
             }
             close(pipefd[0]);
             exit(EXIT_FAILURE);
           } else if(pid < 0) {
-            perror("ant");
+            perror("atom");
             exit(EXIT_FAILURE);
           } else {
 
             close(pipefd[0]);
             if(((pid) = waitpid(pid, &status, 0)) < 0) {
-              printf("%s\n", "ant_shell: wait pid error.");
+              printf("%s\n", "atom_shell: wait pid error.");
             }
             close(pipefd[1]);
           }
@@ -203,7 +203,7 @@ int ant_launch(char **args) {
         printf("%s\n", "usage: #->> cmd > file-name" );
       } else {
         if(pipe(pipefd) == -1) {
-          perror("ant_shell: pipe error");
+          perror("atom_shell: pipe error");
           exit(EXIT_FAILURE);
         }
         pid = fork();
@@ -213,25 +213,25 @@ int ant_launch(char **args) {
 
           in = open(args[2], O_RDONLY);
           if(in < 0) {
-            perror("ant_shell:");
+            perror("atom_shell:");
             exit(EXIT_FAILURE);
           }
           dup2(in, 0);
           char * ls_args[] = {args[0], NULL};
 
           if(execvp(ls_args[0], ls_args) == -1) {
-            perror("ant");
+            perror("atom");
           }
           close(pipefd[0]);
           exit(EXIT_FAILURE);
         } else if(pid < 0) {
-          perror("ant");
+          perror("atom");
           exit(EXIT_FAILURE);
         } else {
 
           close(pipefd[0]);
           if(((pid) = waitpid(pid, &status, 0)) < 0) {
-            printf("%s\n", "ant_shell: wait pid error.");
+            printf("%s\n", "atom_shell: wait pid error.");
           }
           close(pipefd[1]);
         }
@@ -239,7 +239,7 @@ int ant_launch(char **args) {
     } else {
         // its not > nor < its something like ls -l or rm file-name or etc..
         if(pipe(pipefd) == -1) {
-          perror("ant_shell: pipe error");
+          perror("atom_shell: pipe error");
           exit(EXIT_FAILURE);
         }
 
@@ -249,19 +249,19 @@ int ant_launch(char **args) {
           close(pipefd[1]);
           // the child
           if(execvp(args[0], args) == -1) {
-            perror("ant");
+            perror("atom");
           }
 
           close(pipefd[0]);
           exit(EXIT_FAILURE);
         } else if(pid < 0) {
-          perror("ant");
+          perror("atom");
           exit(EXIT_FAILURE);
         } else {
           // the parent
           close(pipefd[0]);
           if(((pid) = waitpid(pid, &status, 0)) < 0 ) {
-            printf("%s\n", "ant_shell: wait pid error.");
+            printf("%s\n", "atom_shell: wait pid error.");
           }
           close(pipefd[1]);
         }
@@ -271,45 +271,45 @@ int ant_launch(char **args) {
   return -1;
 }
 
-char **ant_split_line(char *line) {
-  int bufsize = ANT_TOK_BUFSIZE, position = 0;
+char **atom_split_line(char *line) {
+  int bufsize = atom_TOK_BUFSIZE, position = 0;
   char **tokens = malloc(bufsize * sizeof(char*));
   char *token;
 
   if(!tokens) {
-    fprintf(stderr, "%s\n", "ant_shell: allocation error.");
+    fprintf(stderr, "%s\n", "atom_shell: allocation error.");
     exit(EXIT_FAILURE);
   }
 
-  token = strtok(line, ANT_TOK_DELIM);
+  token = strtok(line, atom_TOK_DELIM);
   while (token != NULL) {
     tokens[position] = token;
     position++;
 
     if(position >= bufsize) {
-      bufsize += ANT_TOK_BUFSIZE;
+      bufsize += atom_TOK_BUFSIZE;
       tokens = realloc(tokens, bufsize * sizeof(char*));
       if(!tokens) {
-        fprintf(stderr, "%s\n", "ant_shell: allocation error.");
+        fprintf(stderr, "%s\n", "atom_shell: allocation error.");
         exit(EXIT_FAILURE);
       }
     }
 
-    token = strtok(NULL, ANT_TOK_DELIM);
+    token = strtok(NULL, atom_TOK_DELIM);
   }
 
   tokens[position] = NULL;
   return tokens;
 }
 
-char *ant_read_line(void) {
+char *atom_read_line(void) {
   char *line = NULL;
   size_t buffsize = 0;
   getline(&line, &buffsize, stdin);
   return line;
 }
 
-int ant_execute(char **args) {
+int atom_execute(char **args) {
   
   int flag = 0;
   int at_index = -1;
@@ -318,8 +318,8 @@ int ant_execute(char **args) {
     return 1;
   }
   // so if user enter cd, exit, or help, for loop catches this commands and executes them.
-  // else goes to ant_launch
-  for (int i = 0; i < ant_num_builtins(); i++) {
+  // else goes to atom_launch
+  for (int i = 0; i < atom_num_builtins(); i++) {
     if(strcmp(args[0], builtin_str[i]) == 0) {
       return (*builtin_func[i])(args);
     }
@@ -354,8 +354,8 @@ int ant_execute(char **args) {
         b++;
       }
 
-      a = ant_launch(new_args);
-      b = ant_launch(new_args2);
+      a = atom_launch(new_args);
+      b = atom_launch(new_args2);
 
       // free(new_args2);
       // free(new_args);
@@ -368,35 +368,35 @@ int ant_execute(char **args) {
   }
 
 
-  return ant_launch(args);
+  return atom_launch(args);
 }
 
-void ant_loop(void) {
+void atom_loop(void) {
   char *line;
   char **args;
   int status;
   // loops while status is in check
   do{
     printf("#->> "); // or $,% ^
-    line = ant_read_line();
-    args = ant_split_line(line);
-    status = ant_execute(args);
+    line = atom_read_line();
+    args = atom_split_line(line);
+    status = atom_execute(args);
 
     free(line);
     free(args);
   } while(status);
 }
 
-void ant_sig_handler(int sig_num) {
-  signal(SIGINT, ant_sig_handler);
-  printf("\n%s\n", "ant_shell: Caught Signal _ to exit type 'exit'! ;)");
-  ant_loop();
+void atom_sig_handler(int sig_num) {
+  signal(SIGINT, atom_sig_handler);
+  printf("\n%s\n", "atom_shell: Caught Signal _ to exit type 'exit'! ;)");
+  atom_loop();
 }
 
 int main(int argc, char ** argv) {
 
-  signal(SIGINT, ant_sig_handler);
-  ant_loop();
+  signal(SIGINT, atom_sig_handler);
+  atom_loop();
 
   return EXIT_SUCCESS;
 }
