@@ -1,5 +1,5 @@
 ﻿	******************************************
-	   ANT_SHELL short for antecedent shell
+	   ATOM_SHELL short for Atom shell
 	******************************************
 
   -I have used some of the list operators like '&&', '&', '||' and others
